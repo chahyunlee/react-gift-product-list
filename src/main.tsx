@@ -1,10 +1,17 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import "pretendard/dist/web/static/pretendard.css";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { ThemeProvider } from "@emotion/react";
+import { AuthProvider } from "@/context/AuthContext";
+import theme from "@/styles/theme/index";
+import App from "@/App";
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
-)
+    <ThemeProvider theme={theme}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </ThemeProvider>
+  </StrictMode>
+);
