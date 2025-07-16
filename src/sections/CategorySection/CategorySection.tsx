@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getThemes } from "@/api/theme";
 import type { Themetype } from "@/types/themeDTO/theme";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import {
   Container,
   Title,
@@ -34,7 +35,11 @@ const CategorySection = () => {
   }, []);
 
   if (loading) {
-    return <>에러</>;
+    return (
+      <Container>
+        <LoadingSpinner size={40} />
+      </Container>
+    );
   }
 
   if (error || themes.length === 0) {
