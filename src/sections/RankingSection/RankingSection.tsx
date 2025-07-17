@@ -10,7 +10,8 @@ import AgeSelectionButton from "@/components/AgeSelectionButton/AgeSelectionButt
 import RankSelectionBar from "@/components/RankSelectionBar/RankSelectionBar";
 import ShowMoreButton from "@/components/ShowMoreButton/ShowMoreButton";
 import CardList from "@/components/CardList/CardList";
-import { cardData } from "@/mockdata/cardData.ts";
+import type { cardItemData } from "@/types/DTO/productDTO";
+import { getRanking } from "@/api/product";
 import { AGE_SELECT } from "@/constants/age";
 import { RANK_SELECT } from "@/constants/tabs";
 import type { TargetType } from "@/constants/age";
@@ -21,6 +22,7 @@ const MIN_VISIBLE_CARDS = 6;
 const RankingSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showAll, setShowAll] = useState(false);
+  const [rankingList, setRankingList] = useState<cardItemData[]>([]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -37,7 +39,23 @@ const RankingSection = () => {
   const selectedTarget = searchParams.get("targetType") as TargetType;
   const selectedRank = searchParams.get("rankType") as RankType;
 
-  const cards = cardData.map((item) => ({
+  useEffect(() => {
+    const fetchRanking = async () => {
+      try {
+        const data = await getRanking({
+          targetType: selectedTarget,
+          rankType: selectedRank,
+        });
+        setRankingList(data);
+      } catch (error) {
+        console.error("랭킹 데이터를 불러오지 못했습니다", error);
+      }
+    };
+
+    fetchRanking();
+  }, [selectedTarget, selectedRank]);
+
+  const cards = rankingList.map((item) => ({
     id: item.id,
     imageUrl: item.imageURL,
     brand: item.brandInfo.name,
@@ -58,7 +76,7 @@ const RankingSection = () => {
     params.set("rankType", rank);
     setSearchParams(params);
   };
-  
+
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
 

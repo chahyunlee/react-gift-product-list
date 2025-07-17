@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getThemes } from "@/api/theme";
-import type { Themetype } from "@/types/themeDTO/theme";
+import type { Themetype } from "@/types/DTO/themeDTO";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import {
   Container,
