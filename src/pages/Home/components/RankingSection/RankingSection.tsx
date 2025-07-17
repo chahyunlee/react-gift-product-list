@@ -24,7 +24,6 @@ const MIN_VISIBLE_CARDS = 6;
 const RankingSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showAll, setShowAll] = useState(false);
-  const [rankingList, setRankingList] = useState<cardItemData[]>([]);
 
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
@@ -43,6 +42,7 @@ const RankingSection = () => {
 
   const selectedTarget = searchParams.get("targetType") as TargetType;
   const selectedRank = searchParams.get("rankType") as RankType;
+
   const { data, isLoading, error, execute } = useAsync<cardItemData[]>([]);
 
   useEffect(() => {
