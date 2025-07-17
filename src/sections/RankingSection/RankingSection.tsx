@@ -11,8 +11,8 @@ import AgeSelectionButton from "@/components/AgeSelectionButton/AgeSelectionButt
 import RankSelectionBar from "@/components/RankSelectionBar/RankSelectionBar";
 import ShowMoreButton from "@/components/ShowMoreButton/ShowMoreButton";
 import CardList from "@/components/CardList/CardList";
-import type { cardItemData } from "@/types/DTO/productDTO";
 import { getRanking } from "@/api/product";
+import type { cardItemData } from "@/types/DTO/productDTO";
 import { AGE_SELECT } from "@/constants/age";
 import { RANK_SELECT } from "@/constants/tabs";
 import type { TargetType } from "@/constants/age";
@@ -24,7 +24,8 @@ const RankingSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showAll, setShowAll] = useState(false);
   const [rankingList, setRankingList] = useState<cardItemData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -44,6 +45,7 @@ const RankingSection = () => {
   useEffect(() => {
     const fetchRanking = async () => {
       setIsLoading(true);
+      setError(null);
       try {
         const data = await getRanking({
           targetType: selectedTarget,
@@ -51,8 +53,7 @@ const RankingSection = () => {
         });
         setRankingList(data);
       } catch (error) {
-        console.error("랭킹 데이터를 불러오지 못했습니다", error);
-        setIsLoading(false);
+        setRankingList([]);
       } finally {
         setIsLoading(false);
       }
@@ -93,6 +94,7 @@ const RankingSection = () => {
       navigate(`/order/${cardId}`);
     }
   };
+
   return (
     <Wrapper>
       <Title>실시간 급상승 선물랭킹</Title>
@@ -116,6 +118,12 @@ const RankingSection = () => {
       <section>
         {isLoading ? (
           <LoadingSpinner size={48} />
+        ) : error ? (
+          <p style={{ textAlign: "center", padding: "2rem" }}>{error}</p>
+        ) : cards.length === 0 ? (
+          <p style={{ textAlign: "center", padding: "2rem" }}>
+            상품이 없습니다.
+          </p>
         ) : (
           <>
             <CardList cards={visibleCards} onCardClick={handleCardClick} />
