@@ -6,6 +6,7 @@ import {
   Title,
   ButtonGroup,
 } from "@/sections/RankingSection/RankingSection.style";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import AgeSelectionButton from "@/components/AgeSelectionButton/AgeSelectionButton";
 import RankSelectionBar from "@/components/RankSelectionBar/RankSelectionBar";
 import ShowMoreButton from "@/components/ShowMoreButton/ShowMoreButton";
@@ -23,6 +24,7 @@ const RankingSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showAll, setShowAll] = useState(false);
   const [rankingList, setRankingList] = useState<cardItemData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -41,6 +43,7 @@ const RankingSection = () => {
 
   useEffect(() => {
     const fetchRanking = async () => {
+      setIsLoading(true);
       try {
         const data = await getRanking({
           targetType: selectedTarget,
@@ -49,6 +52,9 @@ const RankingSection = () => {
         setRankingList(data);
       } catch (error) {
         console.error("랭킹 데이터를 불러오지 못했습니다", error);
+        setIsLoading(false);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -108,16 +114,22 @@ const RankingSection = () => {
         onSelect={handleRankSelect}
       />
       <section>
-        <CardList cards={visibleCards} onCardClick={handleCardClick} />
-        {!showAll && cards.length > MIN_VISIBLE_CARDS && (
-          <ShowMoreButton onClick={() => setShowAll(true)}>
-            더보기
-          </ShowMoreButton>
-        )}
-        {showAll && (
-          <ShowMoreButton onClick={() => setShowAll(false)}>
-            접기
-          </ShowMoreButton>
+        {isLoading ? (
+          <LoadingSpinner size={48} />
+        ) : (
+          <>
+            <CardList cards={visibleCards} onCardClick={handleCardClick} />
+            {!showAll && cards.length > MIN_VISIBLE_CARDS && (
+              <ShowMoreButton onClick={() => setShowAll(true)}>
+                더보기
+              </ShowMoreButton>
+            )}
+            {showAll && (
+              <ShowMoreButton onClick={() => setShowAll(false)}>
+                접기
+              </ShowMoreButton>
+            )}
+          </>
         )}
       </section>
     </Wrapper>
