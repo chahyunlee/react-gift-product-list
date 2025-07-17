@@ -94,7 +94,7 @@ const RankingSection = () => {
       navigate(`/order/${cardId}`);
     }
   };
-
+  
   return (
     <Wrapper>
       <Title>실시간 급상승 선물랭킹</Title>

@@ -1,7 +1,9 @@
+
 import { useState, useEffect } from "react";
 import { getThemes } from "@/api/theme";
 import type { Themetype } from "@/types/DTO/themeDTO";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+
 import {
   Container,
   Title,
@@ -54,6 +56,7 @@ const CategorySection = () => {
           <CategoryItem key={theme.themeId}>
             <CategoryImage src={theme.image} alt={theme.name} />
             <Text>{theme.name}</Text>
+
           </CategoryItem>
         ))}
       </Grid>
