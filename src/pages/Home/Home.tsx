@@ -1,7 +1,7 @@
 import NavigationBar from "@/components/NavigationBar/NavigationBar";
-import SelectFriendSection from "@/sections/SelectFriendSection/SelectFriendSection";
-import CategorySection from "@/sections/CategorySection/CategorySection";
-import RankingSection from "@/sections/RankingSection/RankingSection";
+import SelectFriendSection from "@/pages/Home/components/SelectFriendSection/SelectFriendSection";
+import CategorySection from "@/pages/Home/components/CategorySection/CategorySection";
+import RankingSection from "@/pages/Home/components/RankingSection/RankingSection";
 import { Container, Line1 } from "@/pages/Home/Home.style";
 
 const HomePage = () => {

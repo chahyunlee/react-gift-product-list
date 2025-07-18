@@ -7,7 +7,7 @@ import {
   PlusButton,
   Title,
   UserId,
-} from "@/sections/SelectFriendSection/SelectFriendSection.style";
+} from "@/pages/Home/components/SelectFriendSection/SelectFriendSection.style";
 
 const SelectFriendSection = () => {
   const auth = useContext(AuthContext);

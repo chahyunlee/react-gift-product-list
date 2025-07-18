@@ -11,7 +11,7 @@ import {
   CategoryItem,
   CategoryImage,
   Text,
-} from "@/sections/CategorySection/CategorySection.style";
+} from "@/pages/Home/components/CategorySection/CategorySection.style";
 
 const CategorySection = () => {
   const [themes, setThemes] = useState<Themetype[]>([]);
@@ -27,7 +27,6 @@ const CategorySection = () => {
         setThemes(data);
       } catch (err) {
         setError("테마 목록을 불러오는데 실패했습니다.");
-        console.error("테마 로딩 에러:", err);
       } finally {
         setLoading(false);
       }

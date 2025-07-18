@@ -11,7 +11,7 @@ import {
   GetterList,
   GetterListTable,
   Text,
-} from "@/sections/GroupGettersInfoSection/GroupGettersInfoSection.style";
+} from "@/pages/OrderPage/components/GroupGettersInfoSection/GroupGettersInfoSection.style";
 
 const GroupGettersInfoSection = () => {
   const { watch, setValue } = useFormContext<FormValues>();

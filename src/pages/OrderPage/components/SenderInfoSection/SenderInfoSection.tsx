@@ -7,8 +7,7 @@ import {
   Input,
   SectionDescription,
   SectionDivider,
-} from "@/sections/SenderInfoSection/SenderInfoSection.style";
-
+} from "@/pages/OrderPage/components/SenderInfoSection/SenderInfoSection.style";
 const SenderInfoSection = () => {
   const {
     register,

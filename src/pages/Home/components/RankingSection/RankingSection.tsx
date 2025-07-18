@@ -5,7 +5,7 @@ import {
   Wrapper,
   Title,
   ButtonGroup,
-} from "@/sections/RankingSection/RankingSection.style";
+} from "@/pages/Home/components/RankingSection/RankingSection.style";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import AgeSelectionButton from "@/components/AgeSelectionButton/AgeSelectionButton";
 import RankSelectionBar from "@/components/RankSelectionBar/RankSelectionBar";
