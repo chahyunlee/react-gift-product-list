@@ -32,9 +32,8 @@ export const CategoryItem = styled.div`
 `;
 export const CategoryImage = styled.img`
   width: 60%;
-  
+`;
 export const Text = styled.p`
   margin: ${({ theme }) => theme.spacing.spacing4};
   font-size: ${({ theme }) => theme.typography.body2Regular};
-
 `;
