@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { getThemes } from "@/api/theme";
 import type { Themetype } from "@/types/DTO/themeDTO";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
-
+import { useAsync } from "@/hooks/useAsync";
 import {
   Container,
   Title,
@@ -13,28 +13,13 @@ import {
 } from "@/pages/Home/components/CategorySection/CategorySection.style";
 
 const CategorySection = () => {
-  const [themes, setThemes] = useState<Themetype[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: themes, isLoading, error, execute } = useAsync<Themetype[]>([]);
 
   useEffect(() => {
-    const fetchThemes = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await getThemes();
-        setThemes(data);
-      } catch (err) {
-        setError("테마 목록을 불러오는데 실패했습니다.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchThemes();
+    execute(getThemes);
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Container>
         <LoadingSpinner size={40} />
@@ -45,7 +30,7 @@ const CategorySection = () => {
   if (error) {
     return (
       <Container>
-        <Text>{error}</Text>
+        <Text>테마 목록을 불러오는데 실패했습니다.</Text>
       </Container>
     );
   }
