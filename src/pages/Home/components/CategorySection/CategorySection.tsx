@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { getThemes } from "@/api/theme";
 import type { Themetype } from "@/types/DTO/themeDTO";
@@ -43,8 +42,20 @@ const CategorySection = () => {
     );
   }
 
-  if (error || themes.length === 0) {
-    return null;
+  if (error) {
+    return (
+      <Container>
+        <Text>{error}</Text>
+      </Container>
+    );
+  }
+
+  if (themes.length === 0) {
+    return (
+      <Container>
+        <Text>표시할 테마가 없습니다.</Text>
+      </Container>
+    );
   }
 
   return (
@@ -55,7 +66,6 @@ const CategorySection = () => {
           <CategoryItem key={theme.themeId}>
             <CategoryImage src={theme.image} alt={theme.name} />
             <Text>{theme.name}</Text>
-
           </CategoryItem>
         ))}
       </Grid>

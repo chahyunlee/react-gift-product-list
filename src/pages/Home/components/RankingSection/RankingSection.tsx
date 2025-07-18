@@ -27,6 +27,9 @@ const RankingSection = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
 
@@ -84,9 +87,6 @@ const RankingSection = () => {
     setSearchParams(params);
   };
 
-  const auth = useContext(AuthContext);
-  const navigate = useNavigate();
-
   const handleCardClick = (cardId: number) => {
     if (!auth?.user) {
       navigate("/login", { state: { from: `/order/${cardId}` } });
@@ -94,7 +94,37 @@ const RankingSection = () => {
       navigate(`/order/${cardId}`);
     }
   };
-  
+
+  const renderContent = () => {
+    if (isLoading) {
+      return <LoadingSpinner size={48} />;
+    }
+    if (error) {
+      return <p style={{ textAlign: "center", padding: "24px" }}>{error}</p>;
+    }
+    if (cards.length === 0) {
+      return (
+        <p style={{ textAlign: "center", padding: "24px" }}>상품이 없습니다.</p>
+      );
+    }
+
+    return (
+      <>
+        <CardList cards={visibleCards} onCardClick={handleCardClick} />
+        {!showAll && cards.length > MIN_VISIBLE_CARDS && (
+          <ShowMoreButton onClick={() => setShowAll(true)}>
+            더보기
+          </ShowMoreButton>
+        )}
+        {showAll && (
+          <ShowMoreButton onClick={() => setShowAll(false)}>
+            접기
+          </ShowMoreButton>
+        )}
+      </>
+    );
+  };
+
   return (
     <Wrapper>
       <Title>실시간 급상승 선물랭킹</Title>
@@ -115,31 +145,7 @@ const RankingSection = () => {
         selected={selectedRank}
         onSelect={handleRankSelect}
       />
-      <section>
-        {isLoading ? (
-          <LoadingSpinner size={48} />
-        ) : error ? (
-          <p style={{ textAlign: "center", padding: "2rem" }}>{error}</p>
-        ) : cards.length === 0 ? (
-          <p style={{ textAlign: "center", padding: "2rem" }}>
-            상품이 없습니다.
-          </p>
-        ) : (
-          <>
-            <CardList cards={visibleCards} onCardClick={handleCardClick} />
-            {!showAll && cards.length > MIN_VISIBLE_CARDS && (
-              <ShowMoreButton onClick={() => setShowAll(true)}>
-                더보기
-              </ShowMoreButton>
-            )}
-            {showAll && (
-              <ShowMoreButton onClick={() => setShowAll(false)}>
-                접기
-              </ShowMoreButton>
-            )}
-          </>
-        )}
-      </section>
+      <section>{renderContent()}</section>
     </Wrapper>
   );
 };
