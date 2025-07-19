@@ -1,6 +1,9 @@
+import { AxiosError } from "axios";
 import { useFormContext } from "react-hook-form";
-import type { FormValues } from "@/pages/OrderPage/OrderPage";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import type { FormValues } from "@/pages/OrderPage/OrderPage";
 import { getProductSummary } from "@/api/user/product";
 import type { ProductSummaryDto } from "@/types/DTO/productDTO";
 import {
@@ -21,22 +24,31 @@ interface Props {
 }
 
 const OrderSummarySection = ({ productId }: Props) => {
+  const navigate = useNavigate();
   const { watch } = useFormContext<FormValues>();
   const [product, setProduct] = useState<ProductSummaryDto | null>(null);
-  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const res = await getProductSummary(productId);
         setProduct(res.data);
-        setError(false);
-      } catch (error) {
-        setError(true);
+      } catch (err) {
+        const error = err as AxiosError;
+        const status = error?.response?.status;
+
+        if (status && status >= 400 && status < 500) {
+          toast.error("상품 정보를 불러올 수 없습니다. 다시 시도해주세요.");
+          navigate("/home");
+        } else {
+          toast.error(
+            "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+          );
+        }
       }
     };
     fetchProduct();
-  }, [productId]);
+  }, [productId, navigate]);
 
   const getters = watch("getters") || [];
   const totalQuantity = getters.reduce(
