@@ -4,7 +4,9 @@ export interface LoginRequestDto {
 }
 
 export interface LoginResponseDto {
-  email: string;
-  name: string;
-  authToken: string;
+  data: {
+    email: string;
+    name: string;
+    authToken: string;
+  };
 }
