@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { createContext, useState } from "react";
 import { login as loginAPI } from "@/api/auth/auth";
 import { userStorage } from "@/api/auth/localStoarge";
@@ -18,13 +19,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (data: LoginRequestDto) => {
     try {
-      console.log("로그인 요청 데이터:", data);
       const response = await loginAPI(data);
-      console.log("로그인 응답:", response);
       userStorage.set(response);
       setUser(response);
-    } catch (error) {
-      console.error("로그인 에러 상세:", error);
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.status >= 400 &&
+        error.response.status < 500
+      ) {
+        toast.error(
+          error.response.data.message || "@kakao.com 이메일 주소만 가능합니다."
+        );
+      } else {
+        toast.error("알 수 없는 오류가 발생했습니다.");
+      }
       throw error;
     }
   };
