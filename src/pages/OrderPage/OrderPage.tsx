@@ -43,7 +43,6 @@ const OrderPage = () => {
     );
     navigate("/", { replace: true });
   };
-
   return (
     <>
       <NavigationBar />
