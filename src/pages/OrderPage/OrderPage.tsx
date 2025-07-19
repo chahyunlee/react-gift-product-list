@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import NavigationBar from "@/components/NavigationBar/NavigationBar";
-import { cardData } from "@/mockdata/cardData";
 import { OrderCardData } from "@/mockdata/ordercardData";
 import CardSelectionSection from "@/pages/OrderPage/components/CardSelectionSection/CardSelectionSection";
 import SenderInfoSection from "@/pages/OrderPage/components/SenderInfoSection/SenderInfoSection";
@@ -19,7 +18,7 @@ export type FormValues = {
 const OrderPage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const product = cardData.find((item) => String(item.id) === String(id));
+  const productId = Number(id);
 
   const methods = useForm<FormValues>({
     defaultValues: {
@@ -36,7 +35,7 @@ const OrderPage = () => {
   const onSubmit = (data: FormValues) => {
     window.alert(
       `주문이 완료되었습니다.\n` +
-        `상품명: ${product?.name}\n` +
+        //`상품명: ${product?.name}\n` +
         `구매 수량: ${data.quantity}\n` +
         `발신자 이름: ${data.senderName}\n` +
         `메시지: ${data.cardMessage}`
@@ -51,7 +50,7 @@ const OrderPage = () => {
           <CardSelectionSection />
           <SenderInfoSection />
           <GroupGettersInfoSection />
-          <OrderSummarySection product={product} />
+          <OrderSummarySection productId={productId} />
         </form>
       </FormProvider>
     </>

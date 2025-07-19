@@ -1,5 +1,8 @@
 import { useFormContext } from "react-hook-form";
 import type { FormValues } from "@/pages/OrderPage/OrderPage";
+import { useEffect, useState } from "react";
+import { getProductSummary } from "@/api/user/product";
+import type { ProductSummaryDto } from "@/types/DTO/productDTO";
 import {
   ProductInfoSection,
   SectionTitle,
@@ -13,25 +16,34 @@ import {
   SectionDivider,
 } from "@/pages/OrderPage/OrderPage.style";
 
-interface Product {
-  id: number;
-  name: string;
-  imageURL: string;
-  brandInfo: { name: string };
-  price: { sellingPrice: number };
+interface Props {
+  productId: number;
 }
 
-interface Props {
-  product: Product | undefined;
-}
-const OrderSummarySection = ({ product }: Props) => {
+const OrderSummarySection = ({ productId }: Props) => {
   const { watch } = useFormContext<FormValues>();
+  const [product, setProduct] = useState<ProductSummaryDto | null>(null);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await getProductSummary(productId);
+        setProduct(res.data);
+        setError(false);
+      } catch (error) {
+        setError(true);
+      }
+    };
+    fetchProduct();
+  }, [productId]);
+
   const getters = watch("getters") || [];
   const totalQuantity = getters.reduce(
     (sum, { quantity }) => sum + Number(quantity || 0),
     0
   );
-  const totalPrice = product ? product.price.sellingPrice * totalQuantity : 0;
+  const totalPrice = product ? product.price * totalQuantity : 0;
 
   return (
     <>
@@ -43,9 +55,9 @@ const OrderSummarySection = ({ product }: Props) => {
             <ProductImage src={product.imageURL} />
             <ProductInfo>
               <ProductTitle>{product.name}</ProductTitle>
-              <ProductBrand>{product.brandInfo.name}</ProductBrand>
+              <ProductBrand>{product.brandName}</ProductBrand>
               <ProductPrice>
-                상품가 <b>{product.price.sellingPrice}원</b>
+                상품가 <b>{product.price}원</b>
               </ProductPrice>
             </ProductInfo>
           </ProductCard>
