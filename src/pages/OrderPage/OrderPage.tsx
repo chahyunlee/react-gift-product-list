@@ -3,10 +3,10 @@ import { FormProvider, useForm } from "react-hook-form";
 import NavigationBar from "@/components/NavigationBar/NavigationBar";
 import { cardData } from "@/mockdata/cardData";
 import { OrderCardData } from "@/mockdata/ordercardData";
-import CardSelectionSection from "@/sections/CardSelectionSection/CardSelectionSection";
-import SenderInfoSection from "@/sections/SenderInfoSection/SenderInfoSection";
-import GroupGettersInfoSection from "@/sections/GroupGettersInfoSection/GroupGettersInfoSection";
-import OrderSummarySection from "@/sections/OrderSummarySection/OrderSummarySection";
+import CardSelectionSection from "@/pages/OrderPage/components/CardSelectionSection/CardSelectionSection";
+import SenderInfoSection from "@/pages/OrderPage/components/SenderInfoSection/SenderInfoSection";
+import GroupGettersInfoSection from "@/pages/OrderPage/components/GroupGettersInfoSection/GroupGettersInfoSection";
+import OrderSummarySection from "@/pages/OrderPage/components/OrderSummarySection/OrderSummarySection";
 
 export type FormValues = {
   selectedIdx: number;
@@ -40,11 +40,10 @@ const OrderPage = () => {
         `구매 수량: ${data.quantity}\n` +
         `발신자 이름: ${data.senderName}\n` +
         `메시지: ${data.cardMessage}`
-
     );
     navigate("/", { replace: true });
   };
-  
+
   return (
     <>
       <NavigationBar />

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useForm, useFieldArray, FormProvider } from "react-hook-form";
-import GetterInfoSection from "@/sections/GetterInfoSection/GetterInfoSection";
+import GetterInfoSection from "@/pages/OrderPage/components/GetterInfoSection/GetterInfoSection";
 import type { FormValues } from "@/pages/OrderPage/OrderPage";
 import {
   SectionTitle,

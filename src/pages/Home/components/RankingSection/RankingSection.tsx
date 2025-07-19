@@ -1,16 +1,19 @@
 import { useState, useEffect, useContext } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
+import { useAsync } from "@/hooks/useAsync";
 import {
   Wrapper,
   Title,
   ButtonGroup,
-} from "@/sections/RankingSection/RankingSection.style";
+} from "@/pages/Home/components/RankingSection/RankingSection.style";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import AgeSelectionButton from "@/components/AgeSelectionButton/AgeSelectionButton";
 import RankSelectionBar from "@/components/RankSelectionBar/RankSelectionBar";
 import ShowMoreButton from "@/components/ShowMoreButton/ShowMoreButton";
 import CardList from "@/components/CardList/CardList";
-import { cardData } from "@/mockdata/cardData.ts";
+import { getRanking } from "@/api/product";
+import type { cardItemData } from "@/types/DTO/productDTO";
 import { AGE_SELECT } from "@/constants/age";
 import { RANK_SELECT } from "@/constants/tabs";
 import type { TargetType } from "@/constants/age";
@@ -21,6 +24,9 @@ const MIN_VISIBLE_CARDS = 6;
 const RankingSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showAll, setShowAll] = useState(false);
+
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -37,7 +43,18 @@ const RankingSection = () => {
   const selectedTarget = searchParams.get("targetType") as TargetType;
   const selectedRank = searchParams.get("rankType") as RankType;
 
-  const cards = cardData.map((item) => ({
+  const { data, isLoading, error, execute } = useAsync<cardItemData[]>([]);
+
+  useEffect(() => {
+    execute(() =>
+      getRanking({
+        targetType: selectedTarget,
+        rankType: selectedRank,
+      })
+    );
+  }, [selectedTarget, selectedRank]);
+
+  const cards = data.map((item) => ({
     id: item.id,
     imageUrl: item.imageURL,
     brand: item.brandInfo.name,
@@ -58,9 +75,6 @@ const RankingSection = () => {
     params.set("rankType", rank);
     setSearchParams(params);
   };
-  
-  const auth = useContext(AuthContext);
-  const navigate = useNavigate();
 
   const handleCardClick = (cardId: number) => {
     if (!auth?.user) {
@@ -69,6 +83,34 @@ const RankingSection = () => {
       navigate(`/order/${cardId}`);
     }
   };
+
+  const renderContent = () => {
+    if (isLoading) {
+      return <LoadingSpinner size={48} />;
+    }
+    if (error || cards.length === 0) {
+      return (
+        <p style={{ textAlign: "center", padding: "24px" }}>상품이 없습니다.</p>
+      );
+    }
+
+    return (
+      <>
+        <CardList cards={visibleCards} onCardClick={handleCardClick} />
+        {!showAll && cards.length > MIN_VISIBLE_CARDS && (
+          <ShowMoreButton onClick={() => setShowAll(true)}>
+            더보기
+          </ShowMoreButton>
+        )}
+        {showAll && (
+          <ShowMoreButton onClick={() => setShowAll(false)}>
+            접기
+          </ShowMoreButton>
+        )}
+      </>
+    );
+  };
+
   return (
     <Wrapper>
       <Title>실시간 급상승 선물랭킹</Title>
@@ -89,19 +131,7 @@ const RankingSection = () => {
         selected={selectedRank}
         onSelect={handleRankSelect}
       />
-      <section>
-        <CardList cards={visibleCards} onCardClick={handleCardClick} />
-        {!showAll && cards.length > MIN_VISIBLE_CARDS && (
-          <ShowMoreButton onClick={() => setShowAll(true)}>
-            더보기
-          </ShowMoreButton>
-        )}
-        {showAll && (
-          <ShowMoreButton onClick={() => setShowAll(false)}>
-            접기
-          </ShowMoreButton>
-        )}
-      </section>
+      <section>{renderContent()}</section>
     </Wrapper>
   );
 };

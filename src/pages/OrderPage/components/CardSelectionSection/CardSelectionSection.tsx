@@ -8,7 +8,7 @@ import {
   MainImage,
   MessageInput,
   SectionDescription,
-} from "@/sections/CardSelectionSection/CardSelectionSection.style";
+} from "@/pages/OrderPage/components/CardSelectionSection/CardSelectionSection.style";
 
 const CardSelectionSection = () => {
   const {

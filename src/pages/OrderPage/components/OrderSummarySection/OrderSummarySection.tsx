@@ -11,7 +11,7 @@ import {
   ProductPrice,
   FixedOrderButton,
   SectionDivider,
-} from "@/sections/OrderSummarySection/OrderSummarySection.style";
+} from "@/pages/OrderPage/OrderPage.style";
 
 interface Product {
   id: number;
