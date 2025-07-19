@@ -1,4 +1,6 @@
 import { useFormContext } from "react-hook-form";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
 import type { FormValues } from "@/pages/OrderPage/OrderPage";
 import {
   SectionWrapper,
@@ -8,11 +10,21 @@ import {
   SectionDescription,
   SectionDivider,
 } from "@/pages/OrderPage/components/SenderInfoSection/SenderInfoSection.style";
+import { useEffect } from "react";
+
 const SenderInfoSection = () => {
+  const auth = useContext(AuthContext);
   const {
     register,
+    setValue,
     formState: { errors },
   } = useFormContext<FormValues>();
+
+  useEffect(() => {
+    if (auth?.user?.data.name) {
+      setValue("senderName", auth.user.data.name);
+    }
+  }, [auth?.user?.data.name, setValue]);
   return (
     <>
       <SectionDivider />
