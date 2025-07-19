@@ -7,7 +7,7 @@ import {
   InputLabel,
   Input,
   SectionDescription,
-} from "@/sections/GetterInfoSection/GetterInfoSection.style";
+} from "@/pages/OrderPage/components/GetterInfoSection/GetterInfoSection.style";
 
 interface GetterInfoSectionProps {
   index: number;
