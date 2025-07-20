@@ -1,5 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
 import NavigationBar from "@/components/NavigationBar/NavigationBar";
 import { createOrder } from "@/api/user/order";
 import { OrderCardData } from "@/mockdata/ordercardData";
@@ -7,7 +9,9 @@ import CardSelectionSection from "@/pages/OrderPage/components/CardSelectionSect
 import SenderInfoSection from "@/pages/OrderPage/components/SenderInfoSection/SenderInfoSection";
 import GroupGettersInfoSection from "@/pages/OrderPage/components/GroupGettersInfoSection/GroupGettersInfoSection";
 import OrderSummarySection from "@/pages/OrderPage/components/OrderSummarySection/OrderSummarySection";
-import { toast } from "react-toastify";
+
+const LOGIN_PATH = "/login";
+const HOME_PATH = "/";
 
 export type FormValues = {
   selectedIdx: number;
@@ -37,11 +41,6 @@ const OrderPage = () => {
 
   const { handleSubmit } = methods;
 
-  const getToken = (): string | null => {
-    const tokenData = localStorage.getItem("userInfo");
-    return tokenData ? JSON.parse(tokenData).authToken : null;
-  };
-
   const createOrderDto = (data: FormValues) => ({
     productId,
     message: data.cardMessage,
@@ -65,10 +64,29 @@ const OrderPage = () => {
           `발신자 이름: ${data.senderName}\n` +
           `메시지: ${data.cardMessage}`
       );
-      navigate("/", { replace: true });
+      navigate(HOME_PATH, { replace: true });
     } catch (error) {
-      window.alert("주문에 실패했습니다. 다시 시도해주세요.");
+      handleError(error, productId);
     }
+  };
+
+  const handleUnauthorizedError = (productId: number) => {
+    toast.error("유효하지 않은 토큰입니다.");
+
+    navigate(LOGIN_PATH, {
+      state: {
+        from: `/order/${productId}`,
+      },
+    });
+  };
+
+  const handleError = (error: unknown, productId: number) => {
+    const axiosError = error as AxiosError;
+    if (axiosError.response?.status === 401) {
+      handleUnauthorizedError(productId);
+      return;
+    }
+    window.alert("주문에 실패했습니다. 다시 시도해주세요.");
   };
 
   return (
