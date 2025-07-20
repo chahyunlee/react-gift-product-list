@@ -21,7 +21,7 @@ const SenderInfoSection = () => {
   } = useFormContext<FormValues>();
 
   useEffect(() => {
-    if (auth?.user?.data.name) {
+    if (auth?.user?.data?.name) {
       setValue("senderName", auth.user.data.name);
     }
   }, [auth?.user?.data.name, setValue]);

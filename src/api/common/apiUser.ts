@@ -9,4 +9,20 @@ const apiUser = axios.create({
   },
 });
 
+apiUser.interceptors.request.use(
+  (config) => {
+    const userData = localStorage.getItem("userInfo");
+    if (userData) {
+      const user = JSON.parse(userData);
+      const token = user.data?.authToken;
+      if (token) {
+        config.headers = config.headers ?? {};
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 export default apiUser;
