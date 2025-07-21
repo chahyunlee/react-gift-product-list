@@ -23,16 +23,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       userStorage.set(response);
       setUser(response);
     } catch (error: any) {
-      if (
-        error.response &&
-        error.response.status >= 400 &&
-        error.response.status < 500
-      ) {
-        toast.error(
-          error.response.data.message || "@kakao.com 이메일 주소만 가능합니다."
-        );
+      if (error.response) {
+        const status = error.response.status;
+
+        if (status >= 400 && status < 500) {
+          if (
+            error.response.data.data.message.includes("email") ||
+            error.response.data.data.message.includes("kakao")
+          ) {
+            toast.error("@kakao.com 이메일 주소만 가능합니다.");
+          } else {
+            toast.error(error.response.data.message || "잘못된 요청입니다.");
+          }
+        } else if (status >= 500 && status < 600) {
+          toast.error("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        } else {
+          toast.error("알 수 없는 오류가 발생했습니다.");
+        }
       } else {
-        toast.error("알 수 없는 오류가 발생했습니다.");
+        toast.error("네트워크 오류가 발생했습니다.");
       }
       throw error;
     }
