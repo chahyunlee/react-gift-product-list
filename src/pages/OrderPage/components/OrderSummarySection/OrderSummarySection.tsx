@@ -1,5 +1,11 @@
+import { AxiosError } from "axios";
 import { useFormContext } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import type { FormValues } from "@/pages/OrderPage/OrderPage";
+import { getProductSummary } from "@/api/user/product";
+import type { ProductSummaryDto } from "@/types/DTO/productDTO";
 import {
   ProductInfoSection,
   SectionTitle,
@@ -13,25 +19,43 @@ import {
   SectionDivider,
 } from "@/pages/OrderPage/OrderPage.style";
 
-interface Product {
-  id: number;
-  name: string;
-  imageURL: string;
-  brandInfo: { name: string };
-  price: { sellingPrice: number };
+interface Props {
+  productId: number;
 }
 
-interface Props {
-  product: Product | undefined;
-}
-const OrderSummarySection = ({ product }: Props) => {
+const OrderSummarySection = ({ productId }: Props) => {
+  const navigate = useNavigate();
   const { watch } = useFormContext<FormValues>();
+  const [product, setProduct] = useState<ProductSummaryDto | null>(null);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await getProductSummary(productId);
+        setProduct(res.data);
+      } catch (err) {
+        const error = err as AxiosError;
+        const status = error?.response?.status;
+
+        if (status && status >= 400 && status < 500) {
+          toast.error("상품 정보를 불러올 수 없습니다. 다시 시도해주세요.");
+          navigate("/home");
+        } else {
+          toast.error(
+            "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+          );
+        }
+      }
+    };
+    fetchProduct();
+  }, [productId, navigate]);
+
   const getters = watch("getters") || [];
   const totalQuantity = getters.reduce(
     (sum, { quantity }) => sum + Number(quantity || 0),
     0
   );
-  const totalPrice = product ? product.price.sellingPrice * totalQuantity : 0;
+  const totalPrice = product ? product.price * totalQuantity : 0;
 
   return (
     <>
@@ -43,9 +67,9 @@ const OrderSummarySection = ({ product }: Props) => {
             <ProductImage src={product.imageURL} />
             <ProductInfo>
               <ProductTitle>{product.name}</ProductTitle>
-              <ProductBrand>{product.brandInfo.name}</ProductBrand>
+              <ProductBrand>{product.brandName}</ProductBrand>
               <ProductPrice>
-                상품가 <b>{product.price.sellingPrice}원</b>
+                상품가 <b>{product.price}원</b>
               </ProductPrice>
             </ProductInfo>
           </ProductCard>

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { getThemes } from "@/api/theme";
+import { getThemes } from "@/api/user/theme";
 import type { Themetype } from "@/types/DTO/themeDTO";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { useAsync } from "@/hooks/useAsync";

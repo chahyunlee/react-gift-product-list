@@ -28,10 +28,14 @@ const LoginPage = () => {
     isValid,
   } = useLoginFormValidation();
 
-  const handleLoginClick = (e: React.FormEvent) => {
+  const handleLoginClick = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isValid && auth) {
-      auth.login({ email });
+      try {
+        await auth.login({ email, password });
+      } catch (error) {
+        console.error("로그인 실패", error);
+      }
     }
   };
 

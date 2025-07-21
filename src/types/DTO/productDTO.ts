@@ -26,3 +26,15 @@ export type cardItemData = {
 export interface ProductDetailDataDto {
   data: cardItemData[];
 }
+
+export interface ProductSummaryRequest {
+  id: number;
+  name: string;
+  brandName: string;
+  price: number;
+  imageURL: string;
+}
+
+export interface ProductSummaryResponse {
+  data: ProductSummaryRequest;
+}

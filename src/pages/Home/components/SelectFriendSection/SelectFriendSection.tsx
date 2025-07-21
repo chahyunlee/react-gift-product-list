@@ -11,7 +11,7 @@ import {
 
 const SelectFriendSection = () => {
   const auth = useContext(AuthContext);
-  const userEmail = auth?.user?.email;
+  const userEmail = auth?.user?.data.name;
   const userId = userEmail ? userEmail.split("@")[0] : "";
 
   return (

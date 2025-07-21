@@ -1,8 +1,9 @@
-import apiUser from "@/api/apiUser";
+import apiUser from "@/api/common/apiUser";
 import type {
   RankingRequestParams,
   cardItemData,
   ProductDetailDataDto,
+  ProductSummaryResponse,
 } from "@/types/DTO/productDTO";
 
 export async function getRanking({
@@ -19,4 +20,13 @@ export async function getRanking({
     }
   );
   return response.data.data;
+}
+
+export async function getProductSummary(
+  productId: number
+): Promise<ProductSummaryResponse> {
+  const response = await apiUser.get<ProductSummaryResponse>(
+    `/products/${productId}/summary`
+  );
+  return response.data;
 }

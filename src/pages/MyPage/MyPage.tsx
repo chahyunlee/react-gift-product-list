@@ -12,13 +12,14 @@ const MyPage = () => {
   useEffect(() => {
     if (!auth?.user) {
       navigate(RouterPath.LOGIN, { replace: true });
+      return;
     }
   }, [auth, navigate]);
 
   if (!auth?.user) return null;
 
-  const userEmail = auth.user.email;
-  const userId = userEmail.split("@")[0];
+  const userEmail = auth.user.data.email || "";
+  const userId = auth.user.data.name || "사용자";
 
   const handleLogout = () => {
     auth.logout();

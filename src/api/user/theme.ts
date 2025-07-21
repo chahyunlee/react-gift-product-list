@@ -1,4 +1,4 @@
-import apiUser from "@/api/apiUser";
+import apiUser from "@/api/common/apiUser";
 import type { Themetype } from "@/types/DTO/themeDTO";
 
 export async function getThemes(): Promise<Themetype[]> {
