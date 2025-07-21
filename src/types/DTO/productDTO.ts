@@ -27,7 +27,7 @@ export interface ProductDetailDataDto {
   data: cardItemData[];
 }
 
-export interface ProductSummaryDto {
+export interface ProductSummaryRequest {
   id: number;
   name: string;
   brandName: string;
@@ -36,5 +36,5 @@ export interface ProductSummaryDto {
 }
 
 export interface ProductSummaryResponse {
-  data: ProductSummaryDto;
+  data: ProductSummaryRequest;
 }

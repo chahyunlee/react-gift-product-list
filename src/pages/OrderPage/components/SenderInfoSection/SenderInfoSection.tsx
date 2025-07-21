@@ -10,7 +10,6 @@ import {
   SectionDescription,
   SectionDivider,
 } from "@/pages/OrderPage/components/SenderInfoSection/SenderInfoSection.style";
-import { useEffect } from "react";
 
 const SenderInfoSection = () => {
   const auth = useContext(AuthContext);
@@ -20,11 +19,10 @@ const SenderInfoSection = () => {
     formState: { errors },
   } = useFormContext<FormValues>();
 
-  useEffect(() => {
-    if (auth?.user?.data?.name) {
-      setValue("senderName", auth.user.data.name);
-    }
-  }, [auth?.user?.data.name, setValue]);
+  if (auth?.user?.data?.name) {
+    setValue("senderName", auth.user.data.name);
+  }
+
   return (
     <>
       <SectionDivider />
