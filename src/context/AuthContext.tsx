@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import { createContext, useState } from "react";
 import { login as loginAPI } from "@/api/auth/auth";
-import { userStorage } from "@/api/auth/localStoarge";
+import { userStorage } from "@/storage/localStoarge";
 import type { LoginRequestDto, LoginResponseDto } from "@/types/DTO/authDTO";
 
 interface AuthContextType {
