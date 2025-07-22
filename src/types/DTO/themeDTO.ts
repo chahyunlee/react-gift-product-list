@@ -9,3 +9,11 @@ export interface ThemeProductsResponseDTO {
   cursor: number;
   hasMoreList: boolean;
 }
+
+export interface ThemeInfoResponseDTO {
+  themeId: number;
+  name: string;
+  title: string;
+  description: string;
+  backgroundColor: string;
+}
