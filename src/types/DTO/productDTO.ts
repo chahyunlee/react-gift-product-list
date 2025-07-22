@@ -22,6 +22,14 @@ export type cardItemData = {
   };
 };
 
+export interface CommonCardItem {
+  id: number;
+  imageUrl: string;
+  brand: string;
+  name: string;
+  price: number;
+}
+
 export interface ProductDetailDataDto {
   data: cardItemData[];
 }

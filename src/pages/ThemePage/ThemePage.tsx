@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { RouterPath } from "@/routes/path";
 import { getThemeInfo, getThemeProducts } from "@/api/user/theme";
 import type { ThemeInfoResponseDTO } from "@/types/DTO/themeDTO";
-import type { cardItemData } from "@/types/DTO/productDTO";
+import type { CommonCardItem } from "@/types/DTO/productDTO";
 import NavigationBar from "@/components/NavigationBar/NavigationBar";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import CardList from "@/components/CardList/CardList";
@@ -20,7 +20,7 @@ import {
 
 const ThemePage = () => {
   const [theme, setTheme] = useState<ThemeInfoResponseDTO | null>(null);
-  const [products, setProducts] = useState<cardItemData[]>([]);
+  const [products, setProducts] = useState<CommonCardItem[]>([]);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -34,13 +34,15 @@ const ThemePage = () => {
       setTheme(themeData);
 
       const productData = await getThemeProducts(Number(id));
-      const transformedProducts = productData.list.map((product) => ({
-        id: product.id,
-        imageUrl: product.imageURL,
-        brand: product.brandInfo.name,
-        name: product.name,
-        price: product.price.sellingPrice,
-      }));
+      const transformedProducts: CommonCardItem[] = productData.list.map(
+        (product) => ({
+          id: product.id,
+          imageUrl: product.imageURL,
+          brand: product.brandInfo.name,
+          name: product.name,
+          price: product.price.sellingPrice,
+        })
+      );
       setProducts(transformedProducts);
     } catch (err: any) {
       if (err?.response?.status === 404) {

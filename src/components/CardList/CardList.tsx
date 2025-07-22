@@ -1,16 +1,11 @@
 import { Grid } from "@/components/CardList/CardList.style";
 import Card from "@/components/Card/Card";
+import type { CommonCardItem } from "@/types/DTO/productDTO";
 
-export interface CardListProps {
-  cards: {
-    id: number;
-    imageUrl: string;
-    brand: string;
-    name: string;
-    price: number;
-  }[];
-  onCardClick: (cardId: number) => void;
+interface CardListProps {
+  cards: CommonCardItem[];
   showRank?: boolean;
+  onCardClick?: (id: number) => void;
 }
 
 export default function CardList({

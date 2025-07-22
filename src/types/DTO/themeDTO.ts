@@ -1,3 +1,5 @@
+import type { cardItemData } from "@/types/DTO/productDTO";
+
 export type Themetype = {
   themeId: number;
   name: string;
@@ -5,7 +7,7 @@ export type Themetype = {
 };
 
 export interface ThemeProductsResponseDTO {
-  list: Themetype[];
+  list: cardItemData[];
   cursor: number;
   hasMoreList: boolean;
 }
