@@ -10,15 +10,20 @@ export interface CardListProps {
     price: number;
   }[];
   onCardClick: (cardId: number) => void;
+  showRank?: boolean;
 }
 
-export default function CardList({ cards, onCardClick }: CardListProps) {
+export default function CardList({
+  cards,
+  onCardClick,
+  showRank,
+}: CardListProps) {
   return (
     <Grid>
       {cards.map((card, idx) => (
         <Card
           key={card.id}
-          rank={idx + 1}
+          rank={showRank ? idx + 1 : -1}
           imageUrl={card.imageUrl}
           brand={card.brand}
           name={card.name}

@@ -96,7 +96,11 @@ const RankingSection = () => {
 
     return (
       <>
-        <CardList cards={visibleCards} onCardClick={handleCardClick} />
+        <CardList
+          cards={visibleCards}
+          showRank={true}
+          onCardClick={handleCardClick}
+        />
         {!showAll && cards.length > MIN_VISIBLE_CARDS && (
           <ShowMoreButton onClick={() => setShowAll(true)}>
             더보기
