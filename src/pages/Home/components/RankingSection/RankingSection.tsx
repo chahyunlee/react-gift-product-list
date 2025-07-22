@@ -12,7 +12,7 @@ import AgeSelectionButton from "@/components/AgeSelectionButton/AgeSelectionButt
 import RankSelectionBar from "@/components/RankSelectionBar/RankSelectionBar";
 import ShowMoreButton from "@/components/ShowMoreButton/ShowMoreButton";
 import CardList from "@/components/CardList/CardList";
-import { getRanking } from "@/api/product";
+import { getRanking } from "@/api/user/product";
 import type { cardItemData } from "@/types/DTO/productDTO";
 import { AGE_SELECT } from "@/constants/age";
 import { RANK_SELECT } from "@/constants/tabs";
