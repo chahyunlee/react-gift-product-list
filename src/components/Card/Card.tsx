@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import {
   CardWrapper,
   RankNumber,
@@ -17,16 +18,12 @@ export interface CardProps {
   onClick?: () => void;
 }
 
-export default function Card({
-  rank,
-  imageUrl,
-  brand,
-  name,
-  price,
-  onClick,
-}: CardProps) {
+export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
+  { rank, imageUrl, brand, name, price, onClick },
+  ref
+) {
   return (
-    <CardWrapper onClick={onClick} style={{ cursor: "pointer" }}>
+    <CardWrapper ref={ref} onClick={onClick} style={{ cursor: "pointer" }}>
       {rank !== -1 && <RankNumber>{rank}</RankNumber>}
       <Image src={imageUrl} />
       <Info>
@@ -39,4 +36,6 @@ export default function Card({
       </Info>
     </CardWrapper>
   );
-}
+});
+
+export default Card;
