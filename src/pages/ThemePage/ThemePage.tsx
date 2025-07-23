@@ -1,9 +1,11 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { RouterPath } from "@/routes/path";
 import { getThemeInfo, getThemeProducts } from "@/api/user/theme";
 import type { ThemeInfoResponseDTO } from "@/types/DTO/themeDTO";
 import type { CommonCardItem } from "@/types/DTO/productDTO";
+import { AuthContext } from "@/context/AuthContext";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import NavigationBar from "@/components/NavigationBar/NavigationBar";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import CardList from "@/components/CardList/CardList";
@@ -24,9 +26,16 @@ const ThemePage = () => {
   const [loading, setLoading] = useState(false);
   const [hasMoreList, setHasMoreList] = useState(true);
   const [page, setPage] = useState(0);
+
   const observerRef = useRef<HTMLDivElement | null>(null);
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    throw new Error("AuthContext가 제공되지 않았습니다.");
+  }
+  const { user } = authContext;
 
   const loadThemeInfo = useCallback(async () => {
     if (!id) return;
@@ -74,27 +83,20 @@ const ThemePage = () => {
     loadProducts();
   }, [page]);
 
-  useEffect(() => {
-    if (!hasMoreList || loading) return;
+  useInfiniteScroll({
+    targetRef: observerRef,
+    hasMore: hasMoreList,
+    isLoading: loading,
+    onLoadMore: () => setPage((prev) => prev + 1),
+  });
 
-    const target = observerRef.current;
-    if (!target) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !loading) {
-          setPage((prev) => prev + 1);
-        }
-      },
-      { root: null, rootMargin: "0px", threshold: 1 }
-    );
-
-    observer.observe(target);
-
-    return () => {
-      if (target) observer.unobserve(target);
-    };
-  }, [hasMoreList, loading, products.length]);
+  const handleCardClick = (cardId: number) => {
+    if (!user) {
+      navigate("/login", { state: { from: `/order/${cardId}` } });
+    } else {
+      navigate(`/order/${cardId}`);
+    }
+  };
 
   if (loading && products.length === 0) {
     return <LoadingSpinner size={30} />;
@@ -108,13 +110,11 @@ const ThemePage = () => {
     <Wrapper>
       <NavigationBar />
       <Container>
-        {theme && (
-          <HeroSection bgColor={theme.backgroundColor}>
-            <ThemeLabel>{theme.name}</ThemeLabel>
-            <ThemeTitle>{theme.title}</ThemeTitle>
-            <ThemeDescription>{theme.description}</ThemeDescription>
-          </HeroSection>
-        )}
+        <HeroSection bgColor={theme.backgroundColor}>
+          <ThemeLabel>{theme.name}</ThemeLabel>
+          <ThemeTitle>{theme.title}</ThemeTitle>
+          <ThemeDescription>{theme.description}</ThemeDescription>
+        </HeroSection>
         <Section>
           {products.length === 0 ? (
             <EmptyBox>상품이 없습니다.</EmptyBox>
@@ -124,6 +124,7 @@ const ThemePage = () => {
                 cards={products}
                 showRank={false}
                 lastCardRef={hasMoreList ? observerRef : undefined}
+                onCardClick={handleCardClick}
               />
               {loading && <LoadingSpinner size={20} />}
             </>
