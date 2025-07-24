@@ -18,21 +18,18 @@ export default function CardList({
 }: CardListProps) {
   return (
     <Grid>
-      {cards.map((card, idx) => {
-        const isLast = idx === cards.length - 1;
-        return (
-          <Card
-            key={card.id}
-            rank={showRank ? idx + 1 : undefined}
-            imageUrl={card.imageUrl}
-            brand={card.brand}
-            name={card.name}
-            price={card.price}
-            onClick={onCardClick ? () => onCardClick(card.id) : undefined}
-            ref={isLast ? lastCardRef : undefined}
-          />
-        );
-      })}
+      {cards.map((card, idx) => (
+        <Card
+          key={card.id}
+          rank={showRank ? idx + 1 : undefined}
+          imageUrl={card.imageUrl}
+          brand={card.brand}
+          name={card.name}
+          price={card.price}
+          onClick={onCardClick ? () => onCardClick(card.id) : undefined}
+        />
+      ))}
+      {lastCardRef && <div ref={lastCardRef} />}
     </Grid>
   );
 }

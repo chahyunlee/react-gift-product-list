@@ -2,14 +2,16 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { getThemeInfo, getThemeProducts } from "@/api/user/theme";
 import type { ThemeInfoResponseDTO } from "@/types/DTO/themeDTO";
 import type { CardItem } from "@/types/DTO/productDTO";
+import { useInfiniteScroll } from "./useInfiniteScroll";
 
 export function useThemeProducts(themeId: number | undefined) {
   const [theme, setTheme] = useState<ThemeInfoResponseDTO | null>(null);
   const [products, setProducts] = useState<CardItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasMoreList, setHasMoreList] = useState(true);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const observerRef = useRef<HTMLDivElement | null>(null);
+  const scrollPositionRef = useRef<number>(0);
 
   const loadThemeInfo = useCallback(async () => {
     if (!themeId) return;
@@ -24,6 +26,9 @@ export function useThemeProducts(themeId: number | undefined) {
 
   const loadProducts = useCallback(async () => {
     if (!themeId || !hasMoreList) return;
+    if (page > 0) {
+      scrollPositionRef.current = window.scrollY;
+    }
     setLoading(true);
     try {
       const productData = await getThemeProducts(themeId, page);
@@ -37,11 +42,16 @@ export function useThemeProducts(themeId: number | undefined) {
         })
       );
       setProducts((prev) =>
-        page === 1 ? transformedProducts : [...prev, ...transformedProducts]
+        page === 0 ? transformedProducts : [...prev, ...transformedProducts]
       );
       setHasMoreList(productData.hasMoreList);
     } finally {
       setLoading(false);
+      if (page > 0) {
+        requestAnimationFrame(() => {
+          window.scrollTo(0, scrollPositionRef.current);
+        });
+      }
     }
   }, [themeId, page, hasMoreList]);
 
@@ -53,21 +63,12 @@ export function useThemeProducts(themeId: number | undefined) {
     loadProducts();
   }, [page]);
 
-  useEffect(() => {
-    if (!hasMoreList || loading) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !loading) {
-          setPage((prev) => prev + 1);
-        }
-      },
-      { root: null, rootMargin: "0px", threshold: 1 }
-    );
-    if (observerRef.current) observer.observe(observerRef.current);
-    return () => {
-      if (observerRef.current) observer.unobserve(observerRef.current);
-    };
-  }, [hasMoreList, loading, products.length]);
+  useInfiniteScroll({
+    targetRef: observerRef,
+    hasMore: hasMoreList,
+    isLoading: loading,
+    onLoadMore: () => setPage((prev) => prev + 1),
+  });
 
   return {
     theme,
