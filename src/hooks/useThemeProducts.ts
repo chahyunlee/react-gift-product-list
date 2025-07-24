@@ -61,7 +61,7 @@ export function useThemeProducts(themeId: number | undefined) {
           setPage((prev) => prev + 1);
         }
       },
-      { root: null, rootMargin: "0px", threshold: 0.3 }
+      { root: null, rootMargin: "0px", threshold: 1 }
     );
     if (observerRef.current) observer.observe(observerRef.current);
     return () => {

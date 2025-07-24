@@ -30,7 +30,7 @@ const ThemePage = () => {
     }
   };
 
-  if (loading && products.length === 0) {
+  if (loading) {
     return <LoadingSpinner size={30} />;
   }
 
