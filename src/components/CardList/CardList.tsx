@@ -1,10 +1,10 @@
 import { Grid } from "@/components/CardList/CardList.style";
 import Card from "@/components/Card/Card";
-import type { CommonCardItem } from "@/types/DTO/productDTO";
+import type { CardItem } from "@/types/DTO/productDTO";
 import type { RefObject } from "react";
 
 interface CardListProps {
-  cards: CommonCardItem[];
+  cards: CardItem[];
   showRank?: boolean;
   onCardClick?: (id: number) => void;
   lastCardRef?: RefObject<HTMLDivElement | null>;
@@ -23,7 +23,7 @@ export default function CardList({
         return (
           <Card
             key={card.id}
-            rank={showRank ? idx + 1 : -1}
+            rank={showRank ? idx + 1 : undefined}
             imageUrl={card.imageUrl}
             brand={card.brand}
             name={card.name}

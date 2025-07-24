@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { RouterPath } from "@/routes/path";
 import { getThemeInfo, getThemeProducts } from "@/api/user/theme";
 import type { ThemeInfoResponseDTO } from "@/types/DTO/themeDTO";
-import type { CommonCardItem } from "@/types/DTO/productDTO";
+import type { CardItem } from "@/types/DTO/productDTO";
 import { AuthContext } from "@/context/AuthContext";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import NavigationBar from "@/components/NavigationBar/NavigationBar";
@@ -22,7 +22,7 @@ import {
 
 const ThemePage = () => {
   const [theme, setTheme] = useState<ThemeInfoResponseDTO | null>(null);
-  const [products, setProducts] = useState<CommonCardItem[]>([]);
+  const [products, setProducts] = useState<CardItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasMoreList, setHasMoreList] = useState(true);
   const [page, setPage] = useState(0);
@@ -57,7 +57,7 @@ const ThemePage = () => {
     setLoading(true);
     try {
       const productData = await getThemeProducts(Number(id), page);
-      const transformedProducts: CommonCardItem[] = productData.list.map(
+      const transformedProducts: CardItem[] = productData.list.map(
         (product) => ({
           id: product.id,
           imageUrl: product.imageURL,

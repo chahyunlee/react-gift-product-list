@@ -6,7 +6,7 @@ export interface RankingRequestParams {
   rankType?: RankType;
 }
 
-export type cardItemData = {
+export type CardItemData = {
   id: number;
   name: string;
   imageURL: string;
@@ -22,7 +22,7 @@ export type cardItemData = {
   };
 };
 
-export interface CommonCardItem {
+export interface CardItem {
   id: number;
   imageUrl: string;
   brand: string;
@@ -31,7 +31,7 @@ export interface CommonCardItem {
 }
 
 export interface ProductDetailDataDto {
-  data: cardItemData[];
+  data: CardItemData[];
 }
 
 export interface ProductSummaryRequest {

@@ -10,7 +10,7 @@ import {
 } from "@/components/Card/Card.style";
 
 export interface CardProps {
-  rank: number;
+  rank?: number;
   imageUrl: string;
   brand: string;
   name: string;
@@ -24,7 +24,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
 ) {
   return (
     <CardWrapper ref={ref} onClick={onClick} style={{ cursor: "pointer" }}>
-      {rank !== -1 && <RankNumber>{rank}</RankNumber>}
+      {typeof rank === "number" && rank > 0 && <RankNumber>{rank}</RankNumber>}
       <Image src={imageUrl} />
       <Info>
         <Brand>{brand}</Brand>
