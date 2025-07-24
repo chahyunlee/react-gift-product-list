@@ -24,12 +24,12 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
   },
   {
-    path: RouterPath.THEMEPAGE,
+    path: RouterPath.THEME.DETAIL,
     element: <ThemePage />,
     errorElement: <NotFoundPage />,
   },
   {
-    path: RouterPath.ORDERPAGE,
+    path: RouterPath.ORDER.DETAIL,
     element: <OrderPage />,
     errorElement: <NotFoundPage />,
   },
