@@ -1,10 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { getThemeInfo, getThemeProducts } from "@/api/user/theme";
 import type { ThemeInfoResponseDTO } from "@/types/DTO/themeDTO";
 import type { CardItem } from "@/types/DTO/productDTO";
-import { useInfiniteScroll } from "./useInfiniteScroll";
+import { RouterPath } from "@/routes/path";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 export function useThemeProducts(themeId: number | undefined) {
+  const navigate = useNavigate();
   const [theme, setTheme] = useState<ThemeInfoResponseDTO | null>(null);
   const [products, setProducts] = useState<CardItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -19,6 +22,10 @@ export function useThemeProducts(themeId: number | undefined) {
     try {
       const themeData = await getThemeInfo(themeId);
       setTheme(themeData);
+    } catch (err: any) {
+      if (err?.response?.status === 404) {
+        navigate(RouterPath.HOME, { replace: true });
+      }
     } finally {
       setLoading(false);
     }
