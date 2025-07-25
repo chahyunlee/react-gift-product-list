@@ -45,3 +45,15 @@ export interface ProductSummaryRequest {
 export interface ProductSummaryResponse {
   data: ProductSummaryRequest;
 }
+
+export interface ProductSummaryRequest {
+  id: number;
+  name: string;
+  brandName: string;
+  price: number;
+  imageURL: string;
+}
+
+export interface ProductSummaryResponse {
+  data: ProductSummaryRequest;
+}

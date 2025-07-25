@@ -89,6 +89,25 @@ const OrderPage = () => {
     window.alert("주문에 실패했습니다. 다시 시도해주세요.");
   };
 
+  const handleUnauthorizedError = (productId: number) => {
+    toast.error("유효하지 않은 토큰입니다.");
+
+    navigate(LOGIN_PATH, {
+      state: {
+        from: `/order/${productId}`,
+      },
+    });
+  };
+
+  const handleError = (error: unknown, productId: number) => {
+    const axiosError = error as AxiosError;
+    if (axiosError.response?.status === 401) {
+      handleUnauthorizedError(productId);
+      return;
+    }
+    window.alert("주문에 실패했습니다. 다시 시도해주세요.");
+  };
+    
   return (
     <>
       <NavigationBar />
