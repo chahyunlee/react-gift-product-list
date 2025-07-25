@@ -55,7 +55,7 @@ const OrderSummarySection = ({ productId }: Props) => {
     (sum, { quantity }) => sum + Number(quantity || 0),
     0
   );
-
+  
   const totalPrice = product ? product.price * totalQuantity : 0;
 
   return (
